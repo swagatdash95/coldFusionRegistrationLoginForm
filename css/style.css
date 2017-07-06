@@ -29,7 +29,9 @@ img{max-width:100%;}
 /*end reset*/
 /****-----start-body----****/
 body{
-	background: url(../images/bg-3.png);
+	background: url(../images/bg-3.jpg);
+	background-repeat: no-repeat;
+	background-size: 100%;
 	font-family: 'Open Sans', sans-serif;
 }
 .wrap{
@@ -45,7 +47,7 @@ body a,form li,input[type="submit"],input[type="text"],.sixth-login input[type="
 .login-form {
 	background: #fff;
 	min-height: 600px;
-	width: 30%;
+	width: 50%;
 	margin: 9% auto 4% auto;
 	position: relative;
 	box-shadow: inset 0px 0px 10px 0px #ABABAB,-1px 1px 17px 7px #0F0000;
@@ -343,7 +345,7 @@ a.thank-you-button:hover {
 .login-form-1{
 	background: #fff;
 	min-height: 590px;
-	width: 30%;
+	width: 35%;
 	margin: 9% auto 4% auto;
 	position: relative;
 	box-shadow: inset 0px 0px 10px 0px #ABABAB,-1px 1px 17px 7px #0F0000;

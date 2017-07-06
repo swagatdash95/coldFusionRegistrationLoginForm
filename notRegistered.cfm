@@ -17,15 +17,27 @@ Which has a message asking the user to register first.And a link to the registra
 <link href = 'http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,400,300,700,800' rel='stylesheet' type='text/css'>
 <!--//webfonts-->
 <script src = "//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+<style>
+	a.thank-you-button{
+		padding: 15px 30px;
+		font-size: 20px;
+		font-weight: 100;
+	}
+</style>
 </head>
 <body>
 <!--thank you-->
 <div class = "thank-you">
 	<h4>OOOPS!</h4>
-	<p>You have not yet registered! Please Register First.
+	<p>
+		User Name Incorrect
 	</p>
-		<a href = "#"><h5>Thank you.</h5></a>
+	<p>
+		 In Case, You have not yet registered! Please Register First.
+	</p>
+	<h5>Thank you.</h5>
 	<a href = "index.cfm" class="thank-you-button">Register Here!</a>
+	<a href = "signIn.cfm" class="thank-you-button">SignIn Again?</a>
 </div>
 <!--/thank you-->
 </body>

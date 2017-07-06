@@ -4,23 +4,26 @@ Date of creation: 28-6-17
 Description: This is the page displayed to the user on logging out of the homepage. This again has the Signin functionality
 in-case the user wants to sign back in.
 -->
-<cfif structKeyExists(form,'userLogin')>
+<cfset StructClear(SESSION)>
+<cflogout Session="current">
+<cfif structKeyExists(FORM,'userLogin')>
 	<cfquery name = "allUsers" datasource="Project1">
 		SELECT * FROM userInfo
 	</cfquery>
 	<cfloop query = "allUsers">
-		<cfif form.userEmail EQ #allUsers.Email#>
+		<cfif FORM.userEmail EQ #allUsers.Email#>
 			<cfset userValid = 1 />
 			<cfset userPass = #allUsers.Password#>
-			<cfset validUserName = #allUsers.Name#>
+			<cfset SESSION.validUserName = #allUsers.Name#>
+			<cfset SESSION.imageURL = #allUsers.ImageURL#>
 			<cfbreak>
 		<cfelse>
 			<cfset userValid = 0 />
 		</cfif>
 	</cfloop>
 	<cfif userValid EQ 1>
-		<cfif form.userPassword EQ #userPass#>
-			<cflocation url = '\hi.cfm?variable=#validUserName#' addtoken='no'>
+		<cfif hash(FORM.userPassword) EQ #userPass#>
+			<cflocation url = '\hi.cfm' addtoken = "false">
 		<cfelse>
 			<cfoutput>
 				<script type = "text/javascript">
@@ -48,28 +51,28 @@ in-case the user wants to sign back in.
 </head>
 <body>
  <!--SIGN IN-->
-		<div class = "login-form-1">
-				<div class = "head-info">
-					<h1>Successfully Logged Out</h1>
-					<h3>SIGN IN AGAIN?</h3>
-				</div>
-				<cfform id = "form-signIn" name = "form-signIn">
-					<li>
-						<cfinput type = "text" name = "userEmail" class = "text" placeholder = "Email" onfocus = "this.value = '';" >
-					</li>
-					<li>
-						<cfinput type = "password" name = "userPassword" placeholder = "Password" onfocus = "this.value = '';">
-					</li>
-					<div class = "p-container">
-						<cfinput type = "submit" name = "userLogin" value = "SIGN IN" >
-					</div>
-				</cfform>
-				<div class = "social-icons">
-							<div class = "but-bottom">
-							<a href = "index.cfm" class = "trouble"><p>Need to sign up?</p></a><div class = "clear"> </div></div>
-							<div class = "clear"> </div>
-				</div>
+	<div class = "login-form-1">
+		<div class = "head-info">
+			<h1>Successfully Logged Out</h1>
+			<h3>SIGN IN AGAIN?</h3>
+		</div>
+		<cfform id = "form-signIn" name = "form-signIn">
+			<li>
+				<cfinput type = "text" name = "userEmail" class = "text" placeholder = "Email" onfocus = "this.value = '';" >
+			</li>
+			<li>
+				<cfinput type = "password" name = "userPassword" placeholder = "Password" onfocus = "this.value = '';">
+			</li>
+			<div class = "p-container">
+				<cfinput type = "submit" name = "userLogin" value = "SIGN IN" >
 			</div>
+		</cfform>
+		<div class = "social-icons">
+			<div class = "but-bottom">
+			<a href = "index.cfm" class = "trouble"><p>Need to sign up?</p></a>
+			</div>
+		</div>
+	</div>
  <!--/SIGN IN-->
 </body>
 </html>

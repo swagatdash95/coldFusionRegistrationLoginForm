@@ -3,32 +3,41 @@ Author: Swagat Dash
 Date of creation: 26-6-17
 Description: This is the sign in page of this porject. Once the thank you page has been displayed to the user after his successful registration,
 the user is redirected to this page, where he has to provide his credentials to log into the website. -->
-<cfif structKeyExists(form,'userLogin')>
-	<cfquery name = "allUsers" datasource = "Project1">
-		SELECT * FROM userInfo
-	</cfquery>
-	<cfloop query = "allUsers">
-		<cfif FORM.userEmail EQ #allUsers.Email#>
-			<cfset userValid = 1 />
-			<cfset userPass = #allUsers.Password#>
-			<cfset validUserName = #allUsers.Name#>
-			<cfbreak>
-		<cfelse>
-			<cfset userValid = 0 />
-		</cfif>
-	</cfloop>
-	<cfif userValid EQ 1>
-		<cfif FORM.userPassword EQ #userPass#>
-			<cflocation url = '\hi.cfm?variable=#validUserName#' addtoken='no'>
-		<cfelse>
-			<cfoutput>
-				<script type = "text/javascript">
-					alert('Incorrect Password');
-				</script>
-			</cfoutput>
-		</cfif>
+<cfif structKeyExists(form,"userLogin")>
+	<cfif trim(FORM.userEmail) EQ "" OR trim(FORM.userPassword) EQ "">
+		<script type = "text/javascript">
+			alert("Fields can not be left Empty!!");
+		</script>
 	<cfelse>
-		<cflocation url = '\notRegistered.cfm'>
+		<cfquery name = "allUsers" datasource = "Project1">
+			SELECT * FROM userInfo
+		</cfquery>
+		<cfloop query = "allUsers">
+			<cfif FORM.userEmail EQ #allUsers.Email#>
+				<cfset userValid = 1 />
+				<cfset userPass = #allUsers.Password#>
+				<cflock timeout=20 scope="Session" type="Exclusive">
+					<cfset SESSION.validUserName = #allUsers.Name#>
+					<cfset SESSION.imageURL = #allUsers.ImageURL#>
+				</cflock>
+				<cfbreak>
+			<cfelse>
+				<cfset userValid = 0 />
+			</cfif>
+		</cfloop>
+		<cfif userValid EQ 1>
+			<cfif hash(FORM.userPassword) EQ #userPass#>
+				<cflocation url = '\hi.cfm' addtoken="false">
+			<cfelse>
+				<cfoutput>
+					<script type = "text/javascript">
+						alert('Incorrect Password');
+					</script>
+				</cfoutput>
+			</cfif>
+		<cfelse>
+			<cflocation url = "\notRegistered.cfm">
+		</cfif>
 	</cfif>
 </cfif>
 <!DOCTYPE html>
@@ -47,28 +56,28 @@ the user is redirected to this page, where he has to provide his credentials to 
 </head>
 <body>
  <!--SIGN IN-->
-		<div class = "login-form-1">
-				<div class = "head-info">
-					<h1>SIGN IN</h1>
-					<h2>Welcome back! Nice to see you</h2>
-				</div>
-				<cfform id = "form-signIn" name = "form-signIn">
-					<li>
-						<cfinput type = "text" name = "userEmail" class = "text" placeholder = "Email" onfocus = "this.value = '';" >
-					</li>
-					<li>
-						<cfinput type = "password" name = "userPassword" placeholder = "Password" onfocus = "this.value = '';">
-					</li>
-					<div class = "p-container">
-						<cfinput type = "submit" name = "userLogin" value = "SIGN IN" >
-					</div>
-				</cfform>
-				<div class = "social-icons">
-							<div class = "but-bottom">
-							<a href = "index.cfm" class = "trouble"><p>Need to sign up?</p></a><div class = "clear"> </div></div>
-							<div class = "clear"> </div>
-				</div>
+	<div class = "login-form-1">
+		<div class = "head-info">
+			<h1>SIGN IN</h1>
+			<h2>Welcome back! Nice to see you</h2>
+		</div>
+		<cfform id = "form-signIn" name = "form-signIn">
+			<li>
+				<cfinput type = "text" name = "userEmail" class = "text" placeholder = "Email" onfocus = "this.value = '';" >
+			</li>
+			<li>
+				<cfinput type = "password" name = "userPassword" placeholder = "Password" onfocus = "this.value = '';">
+			</li>
+			<div class = "p-container">
+				<cfinput type = "submit" name = "userLogin" value = "SIGN IN" >
 			</div>
+		</cfform>
+		<div class = "social-icons">
+					<div class = "but-bottom">
+					<a href = "index.cfm" class = "trouble"><p>Need to sign up?</p></a><div class = "clear"> </div></div>
+					<div class = "clear"> </div>
+		</div>
+	</div>
  <!--/SIGN IN-->
 </body>
 </html>

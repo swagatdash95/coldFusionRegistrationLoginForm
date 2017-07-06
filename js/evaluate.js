@@ -52,54 +52,34 @@ $(document).ready(function() {
 				}
 
 			});
-	var flag1=0, flag2=0;
-	$("#uEmail").keyup(function(event){
-				var k = $(this).val();
+	$("#uEmail").keydown(function(event){
+				var k = $("#uEmail").val();
 				var keypressed=(event.which);
-				var msg1="", msg2="";
-				var s = String.fromCharCode(event.which)
-				console.log(s);
-				console.log(keypressed);
+				var pattern = \b[A-Z0-9._]+@[A-Z0-9._]+\.[A-Z]{2,}\b ;
+				var result = pattern.match(k)
 				if(k.length>40)
 				{
-					alert("Can not enter more than 40characters");
+					alert("Can not enter more than 40 characters");
 				}
 				else
-				if($.trim(k)==="")
+				if(keypressed===32)
 				{
 					alert("can not Enter spaces in email!");
 				}
-
-				if(flag1===0)
+				
+				if(result==true)
 				{
-					if(keypressed!==16)
-						msg1+= "Email must have a '@'!";
-					else
-					{
-						flag1 = 1;
-						msg1="";
-					}
-					$("#spnEmail").css("color","red");
-					$("#spnEmail").text(msg1+msg2);
-
+					$("#spnEmail").text("");
+				
 				}
-				if(flag2===0)
+				else
 				{
-					if(keypressed!==190)
-						msg2+= "Email must have a '.'";
-					else
-					{
-						flag2 = 1;
-						msg2="";
-
-					}
 					$("#spnEmail").css("color","red");
-					$("#spnEmail").text(msg1+msg2);
-
+					$("#spnEmail").text("Please Enter a valid email address!");
+					
 				}
 				if(k==="")
 				{
-					flag1=0;flag2=0;
 					$("#spnEmail").text("");
 				}
 

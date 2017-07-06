@@ -22,9 +22,12 @@ personalised home page which has a logout functionality.
 
 <!--thank you-->
 <div class = "thank-you">
-	<div class = "close-1"> </div>
-	<h4>Hey!<cfoutput>#variable#</cfoutput></h4>
+	<h4>Hey!<cfoutput>#SESSION.validUserName#</cfoutput></h4>
 	<p>You Have successfully Logged-in.
+	</p>
+	<p>
+		<cfimage action="writeToBrowser" source="#SESSION.imageURL#" height = "50" width = "50" format = "JPG"/>
+
 	</p>
 		<h5>Thank you for choosing us.</h5>
 
