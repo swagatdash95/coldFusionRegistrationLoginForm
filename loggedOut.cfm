@@ -7,9 +7,10 @@ in-case the user wants to sign back in.
 <cfset StructClear(SESSION)>
 <cflogout Session="current">
 <cfif structKeyExists(FORM,'userLogin')>
-	<cfquery name = "allUsers" datasource="Project1">
-		SELECT * FROM userInfo
-	</cfquery>
+	<cfinvoke component="components/Database"
+	        method="selectDB"
+	        returnVariable="VARIABLES.allUsers">
+	</cfinvoke>
 	<cfloop query = "allUsers">
 		<cfif FORM.userEmail EQ #allUsers.Email#>
 			<cfset userValid = 1 />

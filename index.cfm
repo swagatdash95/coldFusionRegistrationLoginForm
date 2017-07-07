@@ -6,41 +6,37 @@ takes user inputs and redirects the control to a new page.
 -->
 <!---Form Processing Validation--->
 <cfif structKeyExists(FORM,"userSubmit")>
+	<cfquery name = "allUsers" datasource = "Project1">
+			SELECT * FROM userInfo
+	</cfquery>
+	<cfloop query = "VARIABLES.allUsers">
+		<cfif FORM.userEmail EQ #allUsers.Email#>
+			<cfoutput>
+				<script type = "text/javascript">
+					alert("USER ALREADY SIGNED UP! Please log-in.");
+				</script>
+			</cfoutput>
+		</cfif>
+	</cfloop>
 	<!---Server-Side Validation--->
 	<cfset VARIABLES.errorMessages = Arraynew(1) />
 
-	<cfinvoke component="Validation"
-        method="validateUserName"
+	<cfinvoke component="components/Validation"
+        method="validateInputs"
         returnVariable="VARIABLES.errorMessages">
     	<cfinvokeargument name="errorMessageArray" value="#VARIABLES.errorMessages#">
 		<cfinvokeargument name="userName" value="#FORM.userName#">
-	</cfinvoke>
-
-	<cfinvoke component="Validation"
-        method="validateUserEmail"
-        returnVariable="VARIABLES.errorMessages">
-    	<cfinvokeargument name="errorMessageArray" value="#VARIABLES.errorMessages#">
 		<cfinvokeargument name="userEmail" value="#FORM.userEmail#">
-	</cfinvoke>
-
-	<cfinvoke component="Validation"
-        method="validateUserPassword"
-        returnVariable="VARIABLES.errorMessages">
-    	<cfinvokeargument name="errorMessageArray" value="#VARIABLES.errorMessages#">
 		<cfinvokeargument name="userPassword" value="#FORM.userPassword#">
 	</cfinvoke>
 
 	<cfif structKeyExists(form,"userPhoto")>
 		<cftry>
-			<cffile action="upload" destination='C:\ColdFusion2016\cfusion\wwwroot\firstColdFusionProject\registerLoginColdFusion\images' filefield="userPhoto" nameconflict="makeunique" accept="image/jpeg" result="photoResult">
+			<cffile action="upload" destination= #ExpandPath('./images')# filefield="userPhoto" nameconflict="makeunique" accept="image/jpeg" result="photoResult">
 		<cfcatch type="any">
 		   		<!--- file is not written to disk if error is thrown  --->
-		   		<!--- prevent zero length files --->
-		   		<cfif FindNoCase("No data was received in the uploaded", cfcatch.message)>
-		        	<cfabort showerror="<b>Zero length file</b>" />
-
 		    	<!--- prevent invalid file types --->
-		    	<cfelseif FindNoCase("The MIME type or the Extension of the uploaded file", cfcatch.message)>
+		    	<cfif FindNoCase("The MIME type or the Extension of the uploaded file", cfcatch.message)>
 		        	<cfabort showerror="<b>Invalid file type.Please Upload JPEG file only</b>" />
 
 		    	<!--- prevent empty form field --->
@@ -54,22 +50,23 @@ takes user inputs and redirects the control to a new page.
 		    	</cfif>
 		</cfcatch>
 		</cftry>
-		<cfset imageDestination = "#photoResult.SERVERDIRECTORY#\" & "#photoResult.SERVERFILE#">
+		<cfset VARIABLES.imageDestination = "#photoResult.SERVERDIRECTORY#\" & "#photoResult.SERVERFILE#">
 	<cfelse>
-		<cfset imageDestination = "NULL">
+		<cfset VARIABLES.imageDestination = "NULL">
 	</cfif>
 	<cfif ArrayisEmpty(VARIABLES.errorMessages)>
 		<!---Insert Data into Database--->
-		<cfQuery datasource="Project1">
-			INSERT INTO userInfo
-			(Name,Email,Password,ImageURL)
-			VALUES
-		    (<cfqueryparam value="#trim(FORM.userName)#" cfsqltype=“cf_sql_varchar” >,
-		     <cfqueryparam value="#trim(FORM.userEmail)#" cfsqltype=“cf_sql_varchar” >,
-		     <cfqueryparam value="#hash(trim(FORM.userPassword))#" cfsqltype=“CF_SQL_LONGVARCHAR”>,
-		   	 "#imageDestination#")
-		</cfQuery>
-		<cfset VARIABLES.userIsInserted = true />
+		<cfinvoke component="components/Database"
+	        method="insertDB"
+	        returnVariable="VARIABLES.returnVal">
+	    	<cfinvokeargument name="userName" value="#FORM.userName#">
+			<cfinvokeargument name="userEmail" value="#FORM.userEmail#">
+			<cfinvokeargument name="userPassword" value="#FORM.userPassword#">
+			<cfinvokeargument name="imageDestination" value="#VARIABLES.imageDestination#">
+		</cfinvoke>
+		<cfif "#VARIABLES.returnVal#" EQ true>
+			<cfset VARIABLES.userIsInserted=true />
+		</cfif>
 	</cfif>
 </cfif>
 <!DOCTYPE html>
@@ -103,7 +100,7 @@ takes user inputs and redirects the control to a new page.
 	</cfif>
 	 <!--SIGN UP-->
 			<div class="login-form">
-				<cfif isDefined("userIsInserted")>
+				<cfif isdefined("userIsInserted")>
 					<cflocation url = "/thankYou.cfm">
 				<cfelse>
 					<div class="head-info">
@@ -112,22 +109,22 @@ takes user inputs and redirects the control to a new page.
 					</div>
 					<cfform id = "form-signup" name = "form-signup" enctype="multipart/form-data">
 						<li>
-							<cfinput id = "uName" type = "text" class = "text" placeholder = "Name" name = "userName" required = "true" message = "Enter a Name">
+							<cfinput id = "uName" type = "text" class = "text" placeholder = "Name" name = "userName" required = "true" message = "Enter a Name" autocomplete="off">
 						</li>
-						<span id = "spnName"></span>
+						<span id = "spnName" style="font-size:10px;"></span>
 						<li>
-							<cfinput id = "uEmail" type = "text" class = "text" placeholder = "Email" name = "userEmail" required = "true" validate = "eMail">
+							<cfinput id = "uEmail" type = "text" class = "text" placeholder = "Email" name = "userEmail" required = "true" validate = "eMail" autocomplete="off">
 						</li>
-						<span id = "spnEmail"></span>
+						<span id = "spnEmail" style="font-size:10px;"></span>
 						<li>
 							<cfinput id = "uPassword" type = "password" placeholder = "Password" name = "userPassword"  required = "true" message = "Enter a Password">
 						</li>
-						<span id = "spnPassword"></span>
+						<span id = "spnPassword" style="font-size:10px;"></span>
 						<li style = none>
 							<label for="file">Enter your JPEG Photo:</label>
 							<cfinput id = "uPhoto" type = "file" value = "Your JPEG Image" name = "userPhoto" style = "margin:top = 0px">
 						</li>
-						<span id = "spnPassword"></span>
+						<span id = "spnPhoto" style="font-size:10px;"></span>
 						<div class = "p-container">
 									<cfinput id = "submit" name = "userSubmit" type = "submit"  value = "SIGN UP" >
 						</div>
@@ -140,6 +137,6 @@ takes user inputs and redirects the control to a new page.
 				</cfif>
 			</div>
 	 <!--/SIGN UP-->
-	<script language = "javascript" src = "../js/evaluate.js"></script>
+<script language = "javascript" src = "../js/evaluate.js"></script>
 </body>
 </html>

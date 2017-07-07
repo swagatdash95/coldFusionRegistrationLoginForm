@@ -1,7 +1,9 @@
 $(document).ready(function() {
+	var errors = [""];
+	
+	
 	$("#uPassword").keyup(function(){
 				var x= $("#uPassword").val();
-
 				if($.trim(x)==="")
 				{
 					$("#spnPassword").css("color","red");
@@ -23,8 +25,9 @@ $(document).ready(function() {
 			});
 
 	$("#uName").keyup(function(event){
-				var k = $("#uName").val();
+				var k= $("#uName").val();
 				var keypressed=event.which;
+				var pattern = "^[A-Za-z\s]+$";
 				if(k.length>30)
 				{
 					alert("Can not enter more than 30 characters");
@@ -36,7 +39,7 @@ $(document).ready(function() {
 					$("#spnName").text("cant Enter just spaces");
 				}
 				else
-				if(!(keypressed>=65 && keypressed<=90 || keypressed>=97 && keypressed<=122 || keypressed===32 || keypressed===8))
+				if(!(k.match(pattern)))
 				{
 					$("#spnName").css("color","red");
 					$("#spnName").text("Enter only alphabets");
@@ -52,12 +55,11 @@ $(document).ready(function() {
 				}
 
 			});
-	$("#uEmail").keydown(function(event){
-				var k = $("#uEmail").val();
+	$("#uEmail").keyup(function(event){
+				var l = $("#uEmail").val();
 				var keypressed=(event.which);
-				var pattern = \b[A-Z0-9._]+@[A-Z0-9._]+\.[A-Z]{2,}\b ;
-				var result = pattern.match(k)
-				if(k.length>40)
+				var pattern = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$" ;
+				if(l.length>40)
 				{
 					alert("Can not enter more than 40 characters");
 				}
@@ -66,8 +68,7 @@ $(document).ready(function() {
 				{
 					alert("can not Enter spaces in email!");
 				}
-				
-				if(result==true)
+				if(l.match(pattern))
 				{
 					$("#spnEmail").text("");
 				
@@ -76,12 +77,76 @@ $(document).ready(function() {
 				{
 					$("#spnEmail").css("color","red");
 					$("#spnEmail").text("Please Enter a valid email address!");
-					
 				}
-				if(k==="")
+				if(l==="")
 				{
 					$("#spnEmail").text("");
 				}
-
+			});
+	$("#submit").click(function(event){
+			
+				var x= $("#uPassword").val();
+				var l = $("#uEmail").val();
+				var k= $("#uName").val();
+				var pattern = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$" ;
+				var pattern1 = "^[A-Za-z\s]+$";
+				var returnVal = true;
+				var z = $("#uPhoto").val();
+				console.log(z);
+				if(k.length>30)
+				{
+					$("#spnName").css("color","red");
+					$("#spnName").text("* cant Enter more than 30 characters");
+					returnVal = false;
+				}
+				else
+				if($.trim(k)==="")
+				{
+					$("#spnName").css("color","red");
+					$("#spnName").text("* Mandatory Field!");
+					returnVal = false;
+				}
+				else
+				if(!(k.match(pattern1)))
+				{
+					$("#spnName").css("color","red");
+					$("#spnName").text("* Enter only alphabets");
+					returnVal = false;
+				}
+				if($.trim(x)==="")
+				{
+					$("#spnPassword").css("color","red");
+					$("#spnPassword").text("* Mandatory Field!");
+					returnVal = false;
+				}
+				else
+				if(x.length < 9 || x.length > 25)
+				{
+					$("#spnPassword").css("color","red");
+					$("#spnPassword").text("* No. of characters must be between 9-25");
+					returnVal = false;
+				}
+				
+				if(l.length>40)
+				{
+					$("#spnEmail").css("color","red");
+					$("#spnEmail").text("* Can not enter more than 40 characters!");
+					returnVal = false;
+				}
+				else
+				if(!(l.match(pattern)))
+				{
+					$("#spnEmail").css("color","red");
+					$("#spnEmail").text("* Please Enter a valid email address!");
+					returnVal = false;
+				}
+				if($.trim(z)=="")
+				{
+					$("#spnPhoto").css("color","red");
+					$("#spnPhoto").text("* Mandatory Field!");
+					returnVal = false;
+					
+				}
+				return returnVal;
 			});
 });

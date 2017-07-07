@@ -9,10 +9,11 @@ the user is redirected to this page, where he has to provide his credentials to 
 			alert("Fields can not be left Empty!!");
 		</script>
 	<cfelse>
-		<cfquery name = "allUsers" datasource = "Project1">
-			SELECT * FROM userInfo
-		</cfquery>
-		<cfloop query = "allUsers">
+		<cfinvoke component="components/Database"
+	        method="selectDB"
+	        returnVariable="VARIABLES.allUsers">
+	    </cfinvoke>
+		<cfloop query = "VARIABLES.allUsers">
 			<cfif FORM.userEmail EQ #allUsers.Email#>
 				<cfset userValid = 1 />
 				<cfset userPass = #allUsers.Password#>
