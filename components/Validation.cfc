@@ -6,10 +6,11 @@ validate the username, userEmail and Password field.
 -->
 <cfcomponent displayname = "Validation" >
 	<cffunction name="validateInputs" access="public" returnType="array">
-	    <cfargument name="errorMessageArray" type="array" required="true" />
 	    <cfargument name="userName" type="string" required="true" />
 	    <cfargument name="userEmail" type="string" required="true" />
 	    <cfargument name="userPassword" type="string" required="true" />
+
+		<cfset errorMessageArray = [] />
 		<cfif userName EQ "" OR len(userName) GT 30>
 			<cfset arrayAppend(ARGUMENTS.errorMessageArray,'Enter a Name between 1-30 characters')/>
 		</cfif>
@@ -19,6 +20,6 @@ validate the username, userEmail and Password field.
 		<cfif trim(userPassword) EQ "" OR len(userPassword) GT 25 OR len(userPassword) LT 9>
 			<cfset arrayAppend(ARGUMENTS.errorMessageArray,"Enter a Valid Password between 8-25 characters")/>
 		</cfif>
-		<cfreturn ARGUMENTS.errorMessageArray />
+		<cfreturn errorMessageArray />
 	</cffunction>
 </cfcomponent>

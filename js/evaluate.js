@@ -27,7 +27,7 @@ $(document).ready(function() {
 	$("#uName").keyup(function(event){
 				var k= $("#uName").val();
 				var keypressed=event.which;
-				var pattern = "^[A-Za-z\s]+$";
+				var pattern = "^[A-Za-z]+([A-Za-z ]*)$";
 				if(k.length>30)
 				{
 					alert("Can not enter more than 30 characters");
@@ -89,7 +89,7 @@ $(document).ready(function() {
 				var l = $("#uEmail").val();
 				var k= $("#uName").val();
 				var pattern = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$" ;
-				var pattern1 = "^[A-Za-z\s]+$";
+				var pattern1 = "^[A-Za-z]+([A-Za-z ]*)$";
 				var returnVal = true;
 				var z = $("#uPhoto").val();
 				console.log(z);

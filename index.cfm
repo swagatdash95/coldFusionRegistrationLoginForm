@@ -6,16 +6,13 @@ takes user inputs and redirects the control to a new page.
 -->
 <!---Form Processing Validation--->
 <cfif structKeyExists(FORM,"userSubmit")>
-	<cfquery name = "allUsers" datasource = "Project1">
-			SELECT * FROM userInfo
-	</cfquery>
+	<cfinvoke component="components/Database"
+	        method="selectDB"
+	        returnVariable="VARIABLES.allUsers">
+	</cfinvoke>
 	<cfloop query = "VARIABLES.allUsers">
 		<cfif FORM.userEmail EQ #allUsers.Email#>
-			<cfoutput>
-				<script type = "text/javascript">
-					alert("USER ALREADY SIGNED UP! Please log-in.");
-				</script>
-			</cfoutput>
+			<cflocation url = '\alreadyExists.cfm' addtoken="false">
 		</cfif>
 	</cfloop>
 	<!---Server-Side Validation--->
@@ -24,7 +21,7 @@ takes user inputs and redirects the control to a new page.
 	<cfinvoke component="components/Validation"
         method="validateInputs"
         returnVariable="VARIABLES.errorMessages">
-    	<cfinvokeargument name="errorMessageArray" value="#VARIABLES.errorMessages#">
+    	<!--- <cfinvokeargument name="errorMessageArray" value="#VARIABLES.errorMessages#"> --->
 		<cfinvokeargument name="userName" value="#FORM.userName#">
 		<cfinvokeargument name="userEmail" value="#FORM.userEmail#">
 		<cfinvokeargument name="userPassword" value="#FORM.userPassword#">

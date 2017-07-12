@@ -13,7 +13,7 @@ onError() defined.
     <cfset THIS.ApplicationTimeout = CreateTimeSpan( 1, 0, 0, 0) />
 	<cfset THIS.SessionTimeout = CreateTimeSpan(0,1,0,0) />
     <cfset THIS.SessionManagement = true />
-	<!--- <cffunction name="onError" returnType="void">
+	<cffunction name="onError" returnType="void">
     	<cfargument name="exception" required=true/>
     	<cfargument name="eventName" type="String" required=true/>
         	<cfoutput>
@@ -22,5 +22,5 @@ onError() defined.
             	<p>Error Event: #ARGUMENTS.eventName#</p>
             	<p>Error details:#ARGUMENTS.exception#</p>
         	</cfoutput>
-	</cffunction> --->
+	</cffunction>
 </cfcomponent>
